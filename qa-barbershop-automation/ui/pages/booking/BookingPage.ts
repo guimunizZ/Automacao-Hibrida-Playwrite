@@ -60,7 +60,6 @@ export class BookingPage {
 
             const day = Number(cleanText);
 
-            // pega somente datas futuras
             if (day <= today) {
                 continue;
             }

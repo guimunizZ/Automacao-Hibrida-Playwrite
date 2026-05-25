@@ -64,7 +64,9 @@ export class BookingPage {
                 continue;
             }
 
-            console.log(`Selecionando data futura: ${day}`);
+            console.log(
+                `[CI FIX] Selecionando data futura: ${day}`
+            );
 
             await button.scrollIntoViewIfNeeded();
 
@@ -97,7 +99,7 @@ export class BookingPage {
             await timeButton.textContent();
 
         console.log(
-            `Horário selecionado: ${selectedTime}`
+            `[CI FIX] Horário selecionado: ${selectedTime}`
         );
 
         await timeButton.click();

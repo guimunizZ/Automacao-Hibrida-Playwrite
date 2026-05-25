@@ -11,14 +11,20 @@ export class BookingPage {
 
         this.page = page;
 
-        this.nameInput = page.locator('input[name="name"]');
+        this.nameInput = page.locator(
+            'input[name="name"]'
+        );
 
-        this.phoneInput = page.locator('input[name="phone"]');
+        this.phoneInput = page.locator(
+            'input[name="phone"]'
+        );
     }
 
     async fillOnlyName(name: string) {
 
-        await expect(this.nameInput).toBeVisible();
+        await expect(
+            this.nameInput
+        ).toBeVisible();
 
         await this.nameInput.fill(name);
 
@@ -27,7 +33,9 @@ export class BookingPage {
 
     async fillOnlyPhone(phone: string) {
 
-        await expect(this.phoneInput).toBeVisible();
+        await expect(
+            this.phoneInput
+        ).toBeVisible();
 
         await this.phoneInput.fill(phone);
 
@@ -48,9 +56,12 @@ export class BookingPage {
 
             const button = futureDays.nth(i);
 
-            const text = await button.textContent();
+            const text =
+                await button.textContent();
 
-            if (!text) continue;
+            if (!text) {
+                continue;
+            }
 
             const cleanText = text.trim();
 
@@ -64,7 +75,9 @@ export class BookingPage {
                 continue;
             }
 
-            console.log(`Selecionando data futura: ${day}`);
+            console.log(
+                `Selecionando data futura: ${day}`
+            );
 
             await button.scrollIntoViewIfNeeded();
 

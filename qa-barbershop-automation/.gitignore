@@ -1,5 +1,21 @@
-node_modules
-playwright-report
-test-results
-.idea
+# dependencies
+node_modules/
+
+# playwright
+playwright-report/
+test-results/
+
+# IDE
+.idea/
+
+# env
 .env
+.env.*
+
+# logs
+*.log
+
+# cache
+.cache/
+dist/
+build/

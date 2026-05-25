@@ -1,0 +1,43 @@
+name: Regression Tests
+
+on:
+
+  workflow_dispatch:
+
+jobs:
+
+  regression:
+
+    timeout-minutes: 90
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ui
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install browsers
+        run: npx playwright install --with-deps
+
+      - name: Run regression tests
+        run: npx playwright test tests/regression
+
+      - name: Upload Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-report
+          path: ui/playwright-report

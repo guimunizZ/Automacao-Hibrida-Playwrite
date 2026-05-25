@@ -60,13 +60,12 @@ export class BookingPage {
 
             const day = Number(cleanText);
 
+            // pega somente datas futuras
             if (day <= today) {
                 continue;
             }
 
-            console.log(
-                `[CI FIX] Selecionando data futura: ${day}`
-            );
+            console.log(`Selecionando data futura: ${day}`);
 
             await button.scrollIntoViewIfNeeded();
 
@@ -99,7 +98,7 @@ export class BookingPage {
             await timeButton.textContent();
 
         console.log(
-            `[CI FIX] Horário selecionado: ${selectedTime}`
+            `Horário selecionado: ${selectedTime}`
         );
 
         await timeButton.click();

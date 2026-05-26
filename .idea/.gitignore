@@ -1,10 +1,26 @@
-# Default ignored files
-/shelf/
-/workspace.xml
-# Ignored default folder with query files
-/queries/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
-# Editor-based HTTP Client requests
-/httpRequests/
+# dependencies
+node_modules/
+
+# playwright
+playwright-report/
+test-results/
+blob-report/
+
+# auth
+playwright/.auth/
+
+# logs
+*.log
+npm-debug.log*
+
+# env
+.env
+.env.*
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

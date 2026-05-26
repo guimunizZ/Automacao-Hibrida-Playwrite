@@ -3,17 +3,16 @@ name: Playwright Tests
 on:
   push:
     branches:
-      - master
       - main
+      - master
 
   pull_request:
     branches:
-      - master
       - main
+      - master
 
 jobs:
   playwright-tests:
-
     timeout-minutes: 60
 
     runs-on: ubuntu-latest
@@ -26,13 +25,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps

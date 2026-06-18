@@ -1,0 +1,257 @@
+=====================================================
+ALTERNATIVE SPECS REPORT
+GERADO EM: 05/06/2026, 08:27:32
+=====================================================
+
+=====================================================
+NÚMERO:1
+NOME: booking-duplicated-slot.alternative.spec.ts
+CAMINHO: tests/booking/alternative/booking-duplicated-slot.alternative.spec.ts
+FUNCAO: PREENCHER MANUALMENTE
+=====================================================
+
+
+
+=====================================================
+NÚMERO:2
+NOME: booking-phone-validation.alternative.spec.ts
+CAMINHO: tests/booking/alternative/booking-phone-validation.alternative.spec.ts
+FUNCAO: PREENCHER MANUALMENTE
+=====================================================
+
+import { test, expect } from '@playwright/test';
+
+import { LandingPage } from '../../../pages/booking/LandingPage';
+import { BookingPage } from '../../../pages/booking/BookingPage';
+
+test.describe('Booking Alternative', () => {
+
+    test('não deve permitir agendamento sem telefone', async ({ page }) => {
+
+        const landingPage = new LandingPage(page);
+
+        const bookingPage = new BookingPage(page);
+
+        await landingPage.open();
+
+        await landingPage.selectUnit();
+
+        await bookingPage.selectService();
+
+        await bookingPage.selectBarber();
+
+        await bookingPage.fillOnlyName(
+            'Guilherme QA'
+        );
+
+        await bookingPage.selectFutureDate();
+
+        await bookingPage.selectAvailableTime();
+
+        await expect(
+            bookingPage.confirmButton
+        ).toBeDisabled();
+    });
+});
+
+=====================================================
+NÚMERO:3
+NOME: booking-validate-summary.alternative.spec.ts
+CAMINHO: tests/booking/alternative/booking-validate-summary.alternative.spec.ts
+FUNCAO: PREENCHER MANUALMENTE
+=====================================================
+
+import { test, expect } from '@playwright/test';
+
+import { LandingPage } from '../../../pages/booking/LandingPage';
+import { BookingPage } from '../../../pages/booking/BookingPage';
+
+test.describe('Booking Alternative', () => {
+
+    test('deve validar resumo do agendamento', async ({ page }) => {
+
+        const landingPage = new LandingPage(page);
+
+        const bookingPage = new BookingPage(page)   ;
+
+        await landingPage.open();
+
+        await landingPage.selectUnit();
+
+        await bookingPage.selectService();
+
+        await bookingPage.selectBarber();
+
+        await bookingPage.fillClient(
+            'Guilherme QA',
+            '(11) 99999-9999'
+        );
+
+        await bookingPage.selectFutureDate();
+
+        await bookingPage.selectAvailableTime();
+
+        await expect(
+            page.locator('text=Barba')
+        ).toBeVisible();
+
+        await expect(
+            page.locator('text=Dilsinho')
+        ).toBeVisible();
+    });
+});
+
+=====================================================
+NÚMERO:4
+NOME: booking-without-barber.alternative.spec.ts
+CAMINHO: tests/booking/alternative/booking-without-barber.alternative.spec.ts
+FUNCAO: PREENCHER MANUALMENTE
+=====================================================
+
+import { test, expect } from '@playwright/test';
+
+import { LandingPage } from '../../../pages/booking/LandingPage';
+import { BookingPage } from '../../../pages/booking/BookingPage';
+
+test.describe('Booking Alternative', () => {
+
+    test('não deve carregar agenda sem barbeiro', async ({ page }) => {
+
+        const landingPage = new LandingPage(page);
+
+        const bookingPage = new BookingPage(page);
+
+        await landingPage.open();
+
+        await landingPage.selectUnit();
+
+        await bookingPage.selectService();
+
+        const calendar = page.locator('text=Escolha uma data');
+
+        await expect(calendar).not.toBeVisible();
+    });
+});
+
+=====================================================
+NÚMERO:5
+NOME: booking-without-date.alternative.spec.ts
+CAMINHO: tests/booking/alternative/booking-without-date.alternative.spec.ts
+FUNCAO: PREENCHER MANUALMENTE
+=====================================================
+
+import { test, expect } from '@playwright/test';
+
+import { LandingPage } from '../../../pages/booking/LandingPage';
+import { BookingPage } from '../../../pages/booking/BookingPage';
+
+test.describe('Booking Alternative', () => {
+
+    test('não deve permitir confirmar sem data', async ({ page }) => {
+
+        const landingPage = new LandingPage(page);
+
+        const bookingPage = new BookingPage(page);
+
+        await landingPage.open();
+
+        await landingPage.selectUnit();
+
+        await bookingPage.selectService();
+
+        await bookingPage.selectBarber();
+
+        await bookingPage.fillClient(
+            'Guilherme QA',
+            '(11) 99999-9999'
+        );
+
+        await expect(
+            bookingPage.confirmButton
+        ).toBeDisabled();
+    });
+});
+
+=====================================================
+NÚMERO:6
+NOME: booking-without-name.alternative.spec.ts
+CAMINHO: tests/booking/alternative/booking-without-name.alternative.spec.ts
+FUNCAO: PREENCHER MANUALMENTE
+=====================================================
+
+import { test, expect } from '@playwright/test';
+
+import { LandingPage } from '../../../pages/booking/LandingPage';
+import { BookingPage } from '../../../pages/booking/BookingPage';
+
+test.describe('Booking Alternative', () => {
+
+    test('não deve permitir agendamento sem nome', async ({ page }) => {
+
+        const landingPage = new LandingPage(page);
+
+        const bookingPage = new BookingPage(page);
+
+        await landingPage.open();
+
+        await landingPage.selectUnit();
+
+        await bookingPage.selectService();
+
+        await bookingPage.selectBarber();
+
+        await bookingPage.fillOnlyPhone(
+            '(11) 99999-9999'
+        );
+
+        await bookingPage.selectFutureDate();
+
+        await bookingPage.selectAvailableTime();
+
+        await expect(
+            bookingPage.confirmButton
+        ).toBeDisabled();
+    });
+});
+
+=====================================================
+NÚMERO:7
+NOME: booking-without-time.alternative.spec.ts
+CAMINHO: tests/booking/alternative/booking-without-time.alternative.spec.ts
+FUNCAO: PREENCHER MANUALMENTE
+=====================================================
+
+import { test, expect } from '@playwright/test';
+
+import { LandingPage } from '../../../pages/booking/LandingPage';
+import { BookingPage } from '../../../pages/booking/BookingPage';
+
+test.describe('Booking Alternative', () => {
+
+    test('não deve permitir confirmar sem horário', async ({ page }) => {
+
+        const landingPage = new LandingPage(page);
+
+        const bookingPage = new BookingPage(page);
+
+        await landingPage.open();
+
+        await landingPage.selectUnit();
+
+        await bookingPage.selectService();
+
+        await bookingPage.selectBarber();
+
+        await bookingPage.fillClient(
+            'Guilherme QA',
+            '(11) 99999-9999'
+        );
+
+        await bookingPage.selectFutureDate();
+
+        await expect(
+            bookingPage.confirmButton
+        ).toBeDisabled();
+    });
+});
+

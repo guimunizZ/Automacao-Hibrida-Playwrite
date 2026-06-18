@@ -1,0 +1,382 @@
+=====================================================
+SMOKE SPECS REPORT
+GERADO EM: 05/06/2026, 08:27:26
+=====================================================
+
+=====================================================
+NÚMERO:1
+NOME: barbers.smoke.spec.ts
+CAMINHO: tests/smoke/barbers.smoke.spec.ts
+FUNCAO: PREENCHER MANUALMENTE
+=====================================================
+
+
+import { test, expect } from '@playwright/test';
+import { LandingPage } from '../../pages/booking/LandingPage';
+
+test.describe('Smoke - Barbers', () => {
+
+    test('[@smoke] barbeiros devem carregar', async ({ page }) => {
+
+        const landingPage = new LandingPage(page);
+
+        await landingPage.goto();
+
+        await landingPage.selectFirstUnit();
+
+        await expect(page).toHaveURL(
+            /barbershops\/\d+/i
+        );
+    });
+
+});
+
+
+
+=====================================================
+NÚMERO:2
+NOME: booking-flow.smoke.spec.ts
+CAMINHO: tests/smoke/booking-flow.smoke.spec.ts
+FUNCAO: PREENCHER MANUALMENTE
+=====================================================
+
+import { test, expect } from '@playwright/test';
+
+import { LandingPage } from '../../pages/booking/LandingPage';
+
+import { BookingPage } from '../../pages/booking/BookingPage';
+
+import { ConfirmationModal } from '../../pages/booking/ConfirmationModal';
+
+test.describe('Smoke - Booking Flow', () => {
+
+    test('[@smoke] usuário deve conseguir realizar um agendamento válido', async ({ page }) => {
+
+        test.setTimeout(120000);
+
+        const landingPage = new LandingPage(page);
+
+        const bookingPage = new BookingPage(page);
+
+        const confirmationModal = new ConfirmationModal(page);
+
+        await landingPage.open();
+
+        await landingPage.validateHomeLoaded();
+
+        await landingPage.selectUnit();
+
+        await bookingPage.selectService();
+
+        await bookingPage.selectBarber();
+
+        await bookingPage.fillClient(
+            'Guilherme QA',
+            '(11) 99999-9999'
+        );
+
+        await bookingPage.selectDate();
+
+        await bookingPage.selectTime();
+
+        await bookingPage.confirmBooking();
+
+        await confirmationModal.validateSuccess();
+
+        await confirmationModal.validateBookingDetails();
+
+        expect(true).toBeTruthy();
+    });
+});
+
+=====================================================
+NÚMERO:3
+NOME: calendar.smoke.spec.ts
+CAMINHO: tests/smoke/calendar.smoke.spec.ts
+FUNCAO: PREENCHER MANUALMENTE
+=====================================================
+
+import {
+    test
+} from '@playwright/test';
+
+import {
+    LandingPage
+} from '../../pages/booking/LandingPage';
+
+import {
+    BookingPage
+} from '../../pages/booking/BookingPage';
+
+test.use({
+    storageState:
+        'auth/user.json'
+});
+
+test.describe(
+    'Smoke - Calendar',
+    () => {
+
+        test(
+            '[@smoke] deve validar bloqueio de data passada',
+            async ({ page }) => {
+
+                const landingPage =
+                    new LandingPage(page);
+
+                const bookingPage =
+                    new BookingPage(page);
+
+                await landingPage.goto();
+
+                await landingPage.selectUnit(
+                    0
+                );
+
+                await bookingPage.selectService(
+                    0
+                );
+
+                await bookingPage.selectBarber(
+                    'Dilsinho'
+                );
+
+                await bookingPage.fillClient();
+
+                await bookingPage.tryPastDate();
+
+                await bookingPage.validateCannotConfirmPastDate();
+
+                await bookingPage.selectFutureDate();
+
+                await bookingPage.selectHour();
+
+                await bookingPage.validateCanConfirm();
+            }
+        );
+    }
+);
+
+=====================================================
+NÚMERO:4
+NOME: confirmation-details.smoke.spec.ts
+CAMINHO: tests/smoke/confirmation-details.smoke.spec.ts
+FUNCAO: PREENCHER MANUALMENTE
+=====================================================
+
+import { test, expect } from '@playwright/test';
+
+import { LandingPage } from '../../../pages/booking/LandingPage';
+import { BookingPage } from '../../../pages/booking/BookingPage';
+import { ConfirmationModal } from '../../../pages/booking/ConfirmationModal';
+
+test.describe('Booking Alternative', () => {
+
+    test('deve validar dados do agendamento criado', async ({ page }) => {
+
+        const landingPage = new LandingPage(page);
+
+        const bookingPage = new BookingPage(page);
+
+        const confirmationModal =
+            new ConfirmationModal(page);
+
+        await landingPage.open();
+
+        await landingPage.selectUnit();
+
+        await bookingPage.selectService();
+
+        await bookingPage.selectBarber();
+
+        await bookingPage.fillClient(
+            'Guilherme QA',
+            '(11) 99999-9999'
+        );
+
+        await bookingPage.selectFutureDate();
+
+        await bookingPage.selectAvailableTime();
+
+        await bookingPage.confirmBooking();
+
+        await confirmationModal.validateSuccess();
+
+        await expect(
+            page.locator('text=Barba')
+        ).toBeVisible();
+
+        await expect(
+            page.locator('text=Dilsinho')
+        ).toBeVisible();
+
+        await expect(
+            page.locator('text=Guilherme QA')
+        ).toBeVisible();
+    });
+});
+
+=====================================================
+NÚMERO:5
+NOME: confirmation.smoke.spec.ts
+CAMINHO: tests/smoke/confirmation.smoke.spec.ts
+FUNCAO: PREENCHER MANUALMENTE
+=====================================================
+
+import { test } from '@playwright/test';
+
+import { LandingPage } from '../../pages/booking/LandingPage';
+
+import { BookingPage } from '../../pages/booking/BookingPage';
+
+import { ConfirmationModal } from '../../pages/booking/ConfirmationModal';
+
+test.describe('Smoke - Confirmation', () => {
+
+    test(
+        '[@smoke] modal de confirmação deve abrir',
+        async ({ page }) => {
+
+            test.setTimeout(90000);
+
+            const landingPage = new LandingPage(page);
+
+            const bookingPage = new BookingPage(page);
+
+            const confirmationModal =
+                new ConfirmationModal(page);
+
+            await landingPage.open();
+
+            await landingPage.selectUnit();
+
+            await bookingPage.selectService();
+
+            await bookingPage.selectBarber();
+
+            await bookingPage.fillClient(
+                'Guilherme QA',
+                '(11) 99999-9999'
+            );
+
+            await bookingPage.selectDate();
+
+            await bookingPage.selectTime();
+
+            await bookingPage.confirmBooking();
+
+            await confirmationModal.validateSuccess();
+
+            await confirmationModal.validateBookingDetails();
+        }
+    );
+});
+
+=====================================================
+NÚMERO:6
+NOME: home.smoke.spec.ts
+CAMINHO: tests/smoke/home.smoke.spec.ts
+FUNCAO: PREENCHER MANUALMENTE
+=====================================================
+
+import { test } from '@playwright/test';
+
+import { LandingPage } from '../../pages/booking/LandingPage';
+
+test.describe('Smoke - Home', () => {
+
+    test('[@smoke] home deve carregar corretamente', async ({ page }) => {
+
+        const landingPage = new LandingPage(page);
+
+        await landingPage.open();
+
+        await landingPage.validateHomeLoaded();
+    });
+});
+
+
+
+
+=====================================================
+NÚMERO:7
+NOME: services.smoke.spec.ts
+CAMINHO: tests/smoke/services.smoke.spec.ts
+FUNCAO: PREENCHER MANUALMENTE
+=====================================================
+
+import { test } from '@playwright/test';
+
+import { LandingPage } from '../../pages/booking/LandingPage';
+
+import { BookingPage } from '../../pages/booking/BookingPage';
+
+test.describe('Smoke - Services', () => {
+
+    test('[@smoke] serviços devem ser exibidos', async ({ page }) => {
+
+        const landingPage = new LandingPage(page);
+
+        const bookingPage = new BookingPage(page);
+
+        await landingPage.open();
+
+        await landingPage.selectUnit();
+
+        await bookingPage.validateServicesLoaded();
+    });
+});
+
+=====================================================
+NÚMERO:8
+NOME: times.smoke.spec.ts
+CAMINHO: tests/smoke/times.smoke.spec.ts
+FUNCAO: PREENCHER MANUALMENTE
+=====================================================
+
+xx'x'import { test } from '@playwright/test';
+
+import { LandingPage } from '../../pages/booking/LandingPage';
+
+import { BookingPage } from '../../pages/booking/BookingPage';
+
+test.describe('Smoke - Times', () => {
+
+    test('[@smoke] horários devem carregar', async ({ page }) => {
+
+        test.setTimeout(120000);
+
+        const landingPage = new LandingPage(page);
+
+        const bookingPage = new BookingPage(page);
+
+        await landingPage.open();
+
+        await landingPage.selectUnit();
+
+        await bookingPage.selectService();
+
+        await bookingPage.selectBarber();
+
+        await bookingPage.fillClient(
+            'Guilherme QA',
+            '(11) 99999-9999'
+        );
+
+        await bookingPage.selectDate();
+
+        await bookingPage.selectTime();
+
+        await bookingPage.validateAvailableTimes();
+    });
+});
+
+=====================================================
+NÚMERO:9
+NOME: units.smoke.spec.ts
+CAMINHO: tests/smoke/units.smoke.spec.ts
+FUNCAO: PREENCHER MANUALMENTE
+=====================================================
+
+
+

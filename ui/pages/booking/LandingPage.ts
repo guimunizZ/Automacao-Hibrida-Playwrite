@@ -1,71 +1,74 @@
-import { expect, Locator, Page } from '@playwright/test';
-import { BasePage } from '../base/BasePage';
+import {
+    expect,
+    Locator,
+    Page
+} from '@playwright/test';
 
-export class LandingPage extends BasePage {
+export class LandingPage {
 
-    readonly unitCard: Locator;
+    readonly page: Page;
 
-    readonly reserveButton: Locator;
-
-    readonly serviceSection: Locator;
+    readonly reserveButtons: Locator;
 
     constructor(page: Page) {
 
-        super(page);
+        this.page = page;
 
-        // card específico da Unidade I
-        this.unitCard = page.locator('text=Unidade I').first();
+        this.reserveButtons =
+            page.getByRole(
+                'button',
+                {
+                    name: 'Reservar'
+                }
+            );
+    }
 
-        // botão Reservar DENTRO do card
-        this.reserveButton = this.unitCard.locator('..').getByRole('button', {
-            name: /reservar/i
-        });
+    async goto() {
 
-        // seção da página seguinte
-        this.serviceSection = page.locator('text=Barba');
+        await this.page.goto('/');
+
+        await this.page.waitForLoadState(
+            'domcontentloaded'
+        );
     }
 
     async open() {
 
-        await this.page.goto('/', {
-            waitUntil: 'commit',
-            timeout: 90000
-        });
-
-        await this.page.waitForLoadState('domcontentloaded');
+        await this.goto();
     }
 
     async validateHomeLoaded() {
 
-        await expect(this.page).toHaveTitle(/Barbearia/i);
+        await expect(
+            this.reserveButtons.first()
+        ).toBeVisible();
     }
 
-    async selectUnit() {
+    async selectUnit(
+        unitIndex: number = 0
+    ) {
 
-        // garante card visível
-        await expect(this.unitCard).toBeVisible({
-            timeout: 15000
-        });
+        const button =
+            this.reserveButtons.nth(
+                unitIndex
+            );
 
-        // scroll até o card
-        await this.unitCard.scrollIntoViewIfNeeded();
+        await expect(
+            button
+        ).toBeVisible();
 
-        // pequeno delay para hidratação/react
-        await this.page.waitForTimeout(1500);
+        await button.click();
 
-        // clique real
-        await this.page.locator('button:has-text("Reservar")').first().click({
-            force: true
-        });
+        await this.page.waitForURL(
+            /barbershops\/\d+/,
+            {
+                timeout: 30000
+            }
+        );
+    }
 
-        // espera URL mudar
-        await expect(this.page).toHaveURL(/barbershops/, {
-            timeout: 15000
-        });
+    async selectFirstUnit() {
 
-        // confirma que carregou serviços
-        await expect(this.serviceSection.first()).toBeVisible({
-            timeout: 15000
-        });
+        await this.selectUnit(0);
     }
 }

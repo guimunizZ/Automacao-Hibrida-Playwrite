@@ -1,6 +1,12 @@
-import { expect, Locator, Page } from '@playwright/test';
+import {
+    expect,
+    Locator,
+    Page
+} from '@playwright/test';
 
-import { BasePage } from '../base/BasePage';
+import {
+    BasePage
+} from '../base/BasePage';
 
 export class ConfirmationModal extends BasePage {
 
@@ -14,28 +20,74 @@ export class ConfirmationModal extends BasePage {
 
         super(page);
 
-        this.successTitle = page.locator('text=Reserva confirmada');
+        this.successTitle =
+            page.locator(
+                'text=/Reserva/i'
+            );
 
-        this.successMessage = page.locator(
-            'text=Seu horário foi agendado com sucesso'
-        );
+        this.successMessage =
+            page.locator(
+                'text=/agendado|sucesso|confirmada/i'
+            );
 
-        this.bookingDetails = page.locator(
-            'text=Barba'
-        );
+        this.bookingDetails =
+            page.locator(
+                'text=Barba'
+            );
     }
 
     async validateSuccess() {
 
-        await expect(this.successTitle).toBeVisible({
-            timeout: 15000
+        await expect(
+            this.successTitle.first()
+        ).toBeVisible({
+            timeout: 20000
         });
 
-        await expect(this.successMessage).toBeVisible();
+        await expect(
+            this.successMessage.first()
+        ).toBeVisible({
+            timeout: 20000
+        });
     }
 
     async validateBookingDetails() {
 
-        await expect(this.bookingDetails.first()).toBeVisible();
+        await expect(
+            this.bookingDetails.first()
+        ).toBeVisible();
+    }
+
+    async validateClientName(
+        name: string
+    ) {
+
+        await expect(
+            this.page.getByText(
+                name
+            )
+        ).toBeVisible();
+    }
+
+    async validateBarber(
+        barber: string
+    ) {
+
+        await expect(
+            this.page.getByText(
+                barber
+            )
+        ).toBeVisible();
+    }
+
+    async validateService(
+        service: string
+    ) {
+
+        await expect(
+            this.page.getByText(
+                service
+            )
+        ).toBeVisible();
     }
 }

@@ -1,42 +1,50 @@
+# nightly.yml
+
 name: Nightly Tests
 
 on:
-  schedule:
-    - cron: '0 3 * * *'
 
-  workflow_dispatch:
+schedule:
+  - cron: '0 3 * * *'
+
+workflow_dispatch:
 
 jobs:
-  nightly:
-    timeout-minutes: 120
 
-    runs-on: ubuntu-latest
+nightly:
 
-    defaults:
-      run:
-        working-directory: ui
+  ```
+runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+timeout-minutes: 120
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
+defaults:
+  run:
+    working-directory: ui
 
-      - name: Install dependencies
-        run: npm install
+steps:
 
-      - name: Install browsers
-        run: npx playwright install --with-deps
+  - uses: actions/checkout@v4
 
-      - name: Run full suite
-        run: npx playwright test
+  - uses: actions/setup-node@v4
+    with:
+      node-version: 22
+      cache: npm
+      cache-dependency-path: ui/package-lock.json
 
-      - name: Upload Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: nightly-report
-          path: ui/playwright-report
+  - name: Install dependencies
+    run: npm ci
+
+  - name: Install browsers
+    run: npx playwright install --with-deps
+
+  - name: Execute full suite
+    run: npx playwright test
+
+  - name: Upload report
+    if: always()
+    uses: actions/upload-artifact@v4
+    with:
+      name: nightly-report
+      path: ui/playwright-report
+  ```

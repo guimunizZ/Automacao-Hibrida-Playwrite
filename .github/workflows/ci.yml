@@ -1,56 +1,51 @@
-# ci.yml
-
 name: QA Pipeline
 
 on:
-push:
-branches:
-  - main
-  - master
 
-pull_request:
-branches:
-  - main
-  - master
+  push:
+    branches:
+      - master
+
+  pull_request:
+    branches:
+      - master
 
 jobs:
 
-smoke-tests:
+  smoke-tests:
 
-  ```
-runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-timeout-minutes: 30
+    timeout-minutes: 30
 
-defaults:
-  run:
-    working-directory: ui
+    defaults:
+      run:
+        working-directory: ui
 
-steps:
+    steps:
 
-  - name: Checkout
-    uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  - name: Setup Node
-    uses: actions/setup-node@v4
-    with:
-      node-version: 22
-      cache: npm
-      cache-dependency-path: ui/package-lock.json
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
 
-  - name: Install dependencies
-    run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-  - name: Install Playwright
-    run: npx playwright install --with-deps
+      - name: Install Playwright
+        run: npx playwright install --with-deps
 
-  - name: Run smoke suite
-    run: npx playwright test tests/smoke
+      - name: Run smoke suite
+        run: npx playwright test tests/smoke
 
-  - name: Upload report
-    if: always()
-    uses: actions/upload-artifact@v4
-    with:
-      name: smoke-report
-      path: ui/playwright-report
-  ```
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-report
+          path: ui/playwright-report

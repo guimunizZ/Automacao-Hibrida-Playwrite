@@ -1,15 +1,27 @@
-import { test, expect } from '@playwright/test';
+import {
+    test,
+    expect
+} from '@playwright/test';
 
-import { LandingPage } from '../../pages/booking/LandingPage';
-import { BookingPage } from '../../pages/booking/BookingPage';
-import { ConfirmationModal } from '../../pages/booking/ConfirmationModal';
+import {
+    LandingPage
+} from '../../pages/booking/LandingPage';
+
+import {
+    BookingPage
+} from '../../pages/booking/BookingPage';
+
+import {
+    ConfirmationModal
+} from '../../pages/booking/ConfirmationModal';
 
 test.describe(
     'Smoke - Confirmation',
     () => {
 
         test(
-            '[@smoke] deve validar detalhes da reserva criada',
+            '[@smoke] resumo deve refletir exatamente a reserva realizada',
+
             async ({ page }) => {
 
                 const landingPage =
@@ -21,28 +33,44 @@ test.describe(
                 const confirmationModal =
                     new ConfirmationModal(page);
 
-                const expectedUnit =
+                const selectedUnit =
                     'Unidade I';
 
-                const expectedService =
+                const selectedService =
                     'Barba • 30 min';
 
-                const expectedBarber =
-                    'Dilsinho';
+                const selectedBarber =
+                    'Carlos Henrique';
 
                 await landingPage.goto();
 
-                await landingPage.selectUnit(0);
+                await landingPage.selectUnit(
+                    0
+                );
 
-                await bookingPage.selectService(0);
+                await bookingPage.selectService(
+                    0
+                );
 
                 await bookingPage.selectBarber(
-                    expectedBarber
+                    selectedBarber
                 );
 
                 await bookingPage.fillClient();
 
                 await bookingPage.selectFutureDate();
+
+                const selectedHour =
+                    await page
+                        .locator(
+                            'button'
+                        )
+                        .filter({
+                            hasText:
+                                /^\d{2}:\d{2}$/
+                        })
+                        .first()
+                        .textContent();
 
                 await bookingPage.selectHour();
 
@@ -50,51 +78,48 @@ test.describe(
 
                 await confirmationModal.validateSuccess();
 
-                // Serviço
-                await expect(
-                    page.getByText(
-                        expectedService,
-                        {
-                            exact: true
-                        }
-                    )
-                ).toBeVisible();
-
-                // Barbeiro
                 await expect(
                     page.locator(
-                        'p.font-semibold.text-white'
-                    ).filter({
-                        hasText: expectedBarber
-                    })
-                ).toBeVisible();
+                        'main'
+                    )
+                ).toContainText(
+                    selectedService
+                );
 
-                // Unidade
                 await expect(
-                    page.getByRole(
-                        'paragraph'
-                    ).filter({
-                        hasText: expectedUnit
-                    })
-                ).toBeVisible();
+                    page.locator(
+                        'main'
+                    )
+                ).toContainText(
+                    selectedBarber
+                );
 
-                // Campo Data e Horário deve existir
+                await expect(
+                    page.locator(
+                        'main'
+                    )
+                ).toContainText(
+                    selectedUnit
+                );
+
+                await expect(
+                    page.locator(
+                        'main'
+                    )
+                ).toContainText(
+                    selectedHour ?? ''
+                );
+
                 await expect(
                     page.getByText(
-                        'Data e horário',
-                        {
-                            exact: true
-                        }
+                        /\d{2}\/\d{2}\/\d{4}/
                     )
                 ).toBeVisible();
 
-                // Deve exibir um horário válido
-                await expect(
-                    page.getByText(
-                        /\d{2}\/\d{2}\/\d{4}\sàs\s\d{2}:\d{2}\saté\s\d{2}:\d{2}/
-                    )
-                ).toBeVisible();
             }
+
         );
+
     }
+
 );

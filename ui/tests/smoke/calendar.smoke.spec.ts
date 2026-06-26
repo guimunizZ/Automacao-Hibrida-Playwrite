@@ -10,24 +10,25 @@ import {
     BookingPage
 } from '../../pages/booking/BookingPage';
 
-test.use({
-    storageState:
-        'auth/user.json'
-});
-
 test.describe(
     'Smoke - Calendar',
     () => {
 
         test(
             '[@smoke] deve validar bloqueio de data passada',
-            async ({ page }) => {
+            async ({
+                       page
+                   }) => {
 
                 const landingPage =
-                    new LandingPage(page);
+                    new LandingPage(
+                        page
+                    );
 
                 const bookingPage =
-                    new BookingPage(page);
+                    new BookingPage(
+                        page
+                    );
 
                 await landingPage.goto();
 
@@ -40,7 +41,7 @@ test.describe(
                 );
 
                 await bookingPage.selectBarber(
-                    'Dilsinho'
+                    'Carlos Henrique'
                 );
 
                 await bookingPage.fillClient();

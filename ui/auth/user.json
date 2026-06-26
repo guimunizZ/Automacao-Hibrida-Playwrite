@@ -1,14 +1,60 @@
 {
   "cookies": [
     {
-      "name": "__Secure-next-auth.session-token",
-      "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..lhdapXPGf7hPCxfv.YqRGHWmBtJ5RZUnzY87h3zcjwA1ZfHzgtzIfVj9UAoo3DkrWlk2CBmTC6LnZh5GJFfB1xp0b_xZ5a-oOZ0nnxHSZLa0KEopNHCy3BKP3aChDL5nf-AxQ9ZAKfR-TEtHnPFMjBSTSmhuPi2-5O6OZJbCNKA5Dc9ZWUmrJQ20oih7SHaKLUEA7sXLnnXcusgo5UwajNaYJj4MnZJEv3G0gILWN9EUZtgN21VVqOVkvfIwOYS7WM36bG-JSXVVi9DB2J_oey0j8K_i8PwKlHwHm1vVgB-FplGhOkqWOkDYeeYKHqabzuZXTOMm5Z4k8FbGb099T-rqXr5wUsyetEOvrvhKlrTflq8mD5UHrbPAxCPuF4A1J_MF6fYEjX-o147PeM7IQWVW40BRcPlFmvpeduOIglBsfHDsECdctOlIWLUG2OmXA5ko6C0E20SdM3uK2SOIpDiQYjVPNwJgO5w.gpgwvDLttmwqbMHPrRLE_w",
+      "name": "__Host-next-auth.csrf-token",
+      "value": "81db79ff888aee28396c1d554771251cdadcdc122bfddd808c6127c62b132f5c%7C3ba96dc1617910ec7c8909838cbe0855b6f9e800827d09fb58a9c5034c9a5315",
       "domain": "preview-barbeariamuniz.vercel.app",
       "path": "/",
+      "expires": -1,
       "httpOnly": true,
       "secure": true,
       "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-next-auth.callback-url",
+      "value": "https%3A%2F%2Fpreview-barbeariamuniz.vercel.app",
+      "domain": "preview-barbeariamuniz.vercel.app",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "vercel-experiment-uuid",
+      "value": "TF8GaJg3uD5w1eW4i85bZ",
+      "domain": "vercel.live",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None",
+      "partitionKey": "https://preview-barbeariamuniz.vercel.app",
+      "_crHasCrossSiteAncestor": true
     }
   ],
-  "origins": []
+  "origins": [
+    {
+      "origin": "https://preview-barbeariamuniz.vercel.app",
+      "localStorage": [
+        {
+          "name": "nextauth.message",
+          "value": "{\"event\":\"session\",\"data\":{\"trigger\":\"getSession\"},\"timestamp\":1782148572}"
+        }
+      ]
+    },
+    {
+      "origin": "https://vercel.live",
+      "localStorage": [
+        {
+          "name": "vid-https://preview-barbeariamuniz.vercel.app",
+          "value": "\"17821485725750.988893369820029\""
+        },
+        {
+          "name": "vercel-toolbar-experiment-uuid-https://preview-barbeariamuniz.vercel.app",
+          "value": "\"TF8GaJg3uD5w1eW4i85bZ\""
+        }
+      ]
+    }
+  ]
 }

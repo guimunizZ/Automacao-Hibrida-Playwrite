@@ -1,33 +1,64 @@
-import { test, expect } from '@playwright/test';
+import {
+    test,
+    expect
+} from '@playwright/test';
 
-import { LandingPage } from '../../../pages/booking/LandingPage';
-import { BookingPage } from '../../../pages/booking/BookingPage';
+import {
+    LandingPage
+} from '../../../pages/booking/LandingPage';
 
-test.describe('Booking Alternative', () => {
+import {
+    BookingPage
+} from '../../../pages/booking/BookingPage';
 
-    test('não deve permitir confirmar sem horário', async ({ page }) => {
+test.describe(
+    'Booking Alternative',
 
-        const landingPage = new LandingPage(page);
+    () => {
 
-        const bookingPage = new BookingPage(page);
+        test(
+            'não deve permitir confirmar sem horário',
 
-        await landingPage.open();
+            async ({ page }) => {
 
-        await landingPage.selectUnit();
+                const landingPage =
+                    new LandingPage(page);
 
-        await bookingPage.selectService();
+                const bookingPage =
+                    new BookingPage(page);
 
-        await bookingPage.selectBarber();
+                await landingPage.open();
 
-        await bookingPage.fillClient(
-            'Guilherme QA',
-            '(11) 99999-9999'
+                await landingPage.selectUnit(
+                    1
+                );
+
+                await bookingPage.selectService();
+
+                await bookingPage.selectBarber(
+                    'Dilsinho'
+                );
+
+                await bookingPage.fillClientCustom(
+                    'Guilherme QA',
+                    '(11) 99999-9999'
+                );
+
+                await bookingPage.selectFutureDate();
+
+                /*
+                 NÃO seleciona horário
+                */
+
+                await expect(
+                    bookingPage.confirmButton
+                )
+                    .toBeDisabled();
+
+            }
+
         );
 
-        await bookingPage.selectFutureDate();
+    }
 
-        await expect(
-            bookingPage.confirmButton
-        ).toBeDisabled();
-    });
-});
+);

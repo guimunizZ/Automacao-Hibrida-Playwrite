@@ -1,27 +1,50 @@
-import { test, expect } from '@playwright/test';
+import {
+    test,
+    expect
+} from '@playwright/test';
 
-import { LandingPage } from '../../../pages/booking/LandingPage';
-import { BookingPage } from '../../../pages/booking/BookingPage';
+import {
+    LandingPage
+} from '../../../pages/booking/LandingPage';
+
+import {
+    BookingPage
+} from '../../../pages/booking/BookingPage';
 
 test.describe(
     'Booking Alternative',
+
     () => {
 
         test(
             'não deve permitir agendamento sem telefone',
+
             async ({ page }) => {
 
                 const landingPage =
-                    new LandingPage(page);
+                    new LandingPage(
+                        page
+                    );
 
                 const bookingPage =
-                    new BookingPage(page);
+                    new BookingPage(
+                        page
+                    );
 
                 await landingPage.goto();
 
-                await landingPage.selectUnit(0);
+                /*
+                 Dilsinho agora pertence
+                 à Unidade 2
+                */
 
-                await bookingPage.selectService(0);
+                await landingPage.selectUnit(
+                    1
+                );
+
+                await bookingPage.selectService(
+                    0
+                );
 
                 await bookingPage.selectBarber(
                     'Dilsinho'
@@ -37,8 +60,13 @@ test.describe(
 
                 await expect(
                     bookingPage.confirmButton
-                ).toBeDisabled();
+                )
+                    .toBeDisabled();
+
             }
+
         );
+
     }
+
 );

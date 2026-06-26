@@ -1,31 +1,79 @@
-import { test, expect } from '@playwright/test';
+import {
+    test,
+        expect
+} from '@playwright/test';
 
-import { LandingPage } from '../../../pages/booking/LandingPage';
-import { BookingPage } from '../../../pages/booking/BookingPage';
+import {
+    LandingPage
+} from '../../../pages/booking/LandingPage';
 
-test.describe('Booking Alternative', () => {
+import {
+    BookingPage
+} from '../../../pages/booking/BookingPage';
 
-    test('não deve permitir confirmar sem data', async ({ page }) => {
+test.describe(
+    'Booking Alternative',
 
-        const landingPage = new LandingPage(page);
+    () => {
 
-        const bookingPage = new BookingPage(page);
+        test(
+            'não deve permitir confirmar sem data',
 
-        await landingPage.open();
+            async ({ page }) => {
 
-        await landingPage.selectUnit();
+                const landingPage =
+                    new LandingPage(page);
 
-        await bookingPage.selectService();
+                const bookingPage =
+                    new BookingPage(page);
 
-        await bookingPage.selectBarber();
+                await landingPage.open();
 
-        await bookingPage.fillClient(
-            'Guilherme QA',
-            '(11) 99999-9999'
+                await landingPage.selectUnit(
+                    1
+                );
+
+                await bookingPage.selectService();
+
+                await bookingPage.selectBarber(
+                    'Dilsinho'
+                );
+
+                await bookingPage.fillClientCustom(
+                    'Guilherme QA',
+                    '(11) 99999-9999'
+                );
+
+                /*
+                 SEM DATA
+                */
+
+                const availableTimes =
+                    page
+                        .locator(
+                            'button'
+                        )
+                        .filter({
+                            hasText:
+                                /^\d{2}:\d{2}$/
+                        });
+
+                await expect(
+                    availableTimes
+                )
+                    .toHaveCount(
+                        0
+                    );
+
+                await expect(
+                    bookingPage.confirmButton
+                )
+                    .toBeDisabled();
+
+            }
+
         );
 
-        await expect(
-            bookingPage.confirmButton
-        ).toBeDisabled();
-    });
-});
+    }
+
+);

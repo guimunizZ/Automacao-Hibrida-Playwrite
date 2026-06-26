@@ -1,34 +1,61 @@
-import { test, expect } from '@playwright/test';
+import {
+    test,
+    expect
+} from '@playwright/test';
 
-import { LandingPage } from '../../../pages/booking/LandingPage';
-import { BookingPage } from '../../../pages/booking/BookingPage';
+import {
+    LandingPage
+} from '../../../pages/booking/LandingPage';
 
-test.describe('Booking Alternative', () => {
+import {
+    BookingPage
+} from '../../../pages/booking/BookingPage';
 
-    test('não deve permitir agendamento sem nome', async ({ page }) => {
+test.describe(
+    'Booking Alternative',
 
-        const landingPage = new LandingPage(page);
+    () => {
 
-        const bookingPage = new BookingPage(page);
+        test(
+            'não deve permitir agendamento sem nome',
 
-        await landingPage.open();
+            async ({ page }) => {
 
-        await landingPage.selectUnit();
+                const landingPage =
+                    new LandingPage(page);
 
-        await bookingPage.selectService();
+                const bookingPage =
+                    new BookingPage(page);
 
-        await bookingPage.selectBarber();
+                await landingPage.open();
 
-        await bookingPage.fillOnlyPhone(
-            '(11) 99999-9999'
+                await landingPage.selectUnit(
+                    1
+                );
+
+                await bookingPage.selectService();
+
+                await bookingPage.selectBarber(
+                    'Dilsinho'
+                );
+
+                await bookingPage.fillOnlyPhone(
+                    '(11) 99999-9999'
+                );
+
+                await bookingPage.selectFutureDate();
+
+                await bookingPage.selectAvailableTime();
+
+                await expect(
+                    bookingPage.confirmButton
+                )
+                    .toBeDisabled();
+
+            }
+
         );
 
-        await bookingPage.selectFutureDate();
+    }
 
-        await bookingPage.selectAvailableTime();
-
-        await expect(
-            bookingPage.confirmButton
-        ).toBeDisabled();
-    });
-});
+);

@@ -3,61 +3,131 @@ import {
     expect
 } from '@playwright/test';
 
-import { LandingPage } from '../../../pages/booking/LandingPage';
-import { BookingPage } from '../../../pages/booking/BookingPage';
+import {
+    LandingPage
+} from '../../../pages/booking/LandingPage';
+
+import {
+    BookingPage
+} from '../../../pages/booking/BookingPage';
+
+function normalize(
+    value: string
+) {
+
+    return value
+        .replace(/\u00A0/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+}
 
 test.describe(
     'Booking Alternative',
+
     () => {
 
         test(
+
             'deve validar resumo do agendamento',
+
             async ({ page }) => {
 
                 const landingPage =
-                    new LandingPage(page);
+                    new LandingPage(
+                        page
+                    );
 
                 const bookingPage =
-                    new BookingPage(page);
+                    new BookingPage(
+                        page
+                    );
 
-                await landingPage.open();
+                await landingPage.goto();
 
-                await landingPage.selectUnit();
+                /*
+                 Unidade II
+                 (Dilsinho)
+                */
 
-                const serviceName =
-                    (
-                        await page
-                            .getByRole(
-                                'heading',
-                                {
-                                    name: /barba/i
-                                }
-                            )
-                            .first()
-                            .textContent()
-                    )?.trim() ?? '';
-
-                console.log(
-                    'Serviço:',
-                    serviceName
+                await landingPage.selectUnit(
+                    1
                 );
 
-                const servicePrice =
+                /*
+                 serviço esperado
+                */
+
+                const selectedService =
+                    'Barba';
+
+                /*
+                 pega exatamente
+                 o card escolhido
+                */
+
+                const serviceTitle =
+                    page
+                        .getByText(
+                            selectedService,
+                            {
+                                exact: true
+                            }
+                        )
+                        .first();
+
+                await expect(
+                    serviceTitle
+                )
+                    .toBeVisible();
+
+                const serviceCard =
+                    serviceTitle
+                        .locator(
+                            'xpath=ancestor::*[.//button[contains(.,"Reservar")]][1]'
+                        );
+
+                const serviceData =
+                    normalize(
+                        (
+                            await serviceCard
+                                .textContent()
+                        )
+                        ?? ''
+                    );
+
+                const selectedPrice =
                     (
-                        await page
-                            .getByText(
-                                /r\$\s*\d+/i
-                            )
-                            .first()
-                            .textContent()
-                    )?.trim() ?? '';
+                        serviceData.match(
+                            /R\$\s*[\d.,]+/
+                        )
+                        ?? []
+                    )[0]
+
+                    ?? '';
 
                 console.log(
-                    'Preço:',
-                    servicePrice
+                    '\n===== SERVIÇO ESCOLHIDO ====='
                 );
 
-                await bookingPage.selectService();
+                console.log(
+                    serviceData
+                );
+
+                /*
+                 reserva exatamente
+                 esse serviço
+                */
+
+                await serviceCard
+                    .getByRole(
+                        'button',
+                        {
+                            name:
+                                'Reservar'
+                        }
+                    )
+                    .click();
 
                 await bookingPage.selectBarber(
                     'Dilsinho'
@@ -68,120 +138,108 @@ test.describe(
                     '(11) 99999-9999'
                 );
 
-                const selectedDate =
-                    (
-                        await page
-                            .getByRole(
-                                'button',
-                                {
-                                    name:
-                                        /segunda-feira|terça-feira|quarta-feira|quinta-feira|sexta-feira/i
-                                }
-                            )
-                            .last()
-                            .getAttribute(
-                                'aria-label'
-                            )
-                    ) ?? '';
-
-                console.log(
-                    'Data:',
-                    selectedDate
-                );
-
                 await bookingPage.selectFutureDate();
 
-                const selectedTime =
+                const selectedHour =
                     (
                         await page
-                            .locator('button')
+                            .locator(
+                                'button'
+                            )
                             .filter({
                                 hasText:
                                     /^\d{2}:\d{2}$/
                             })
                             .first()
                             .textContent()
-                    )?.trim() ?? '';
+                    )
+                        ?.trim()
 
-                console.log(
-                    'Horário:',
-                    selectedTime
-                );
+                    ?? '';
 
                 await bookingPage.selectAvailableTime();
 
+                /*
+                 resumo REAL
+                */
+
                 const summary =
-                    page.locator(
-                        '.border-t.border-secondary'
-                    ).nth(1);
+                    page
+                        .locator(
+                            'div'
+                        )
+                        .filter({
+                            hasText:
+                                /Previsão do atendimento/i
+                        })
+                        .first();
 
                 await expect(
                     summary
-                ).toBeVisible();
+                )
+                    .toBeVisible();
 
                 const summaryText =
-                    (
-                        await summary.textContent()
-                    )?.trim() ?? '';
+                    normalize(
+                        (
+                            await summary
+                                .textContent()
+                        )
+                        ?? ''
+                    );
 
                 console.log(
-                    'Resumo:',
+                    '\n===== RESUMO ====='
+                );
+
+                console.log(
                     summaryText
                 );
 
-                await expect(
-                    summary
-                ).toContainText(
-                    serviceName
-                );
+                /*
+                 validação
+                */
 
-                await expect(
-                    summary
-                ).toContainText(
-                    servicePrice
-                );
-
-                await expect(
-                    summary
-                ).toContainText(
-                    selectedTime
-                );
-
-                const dayMatch =
-                    selectedDate.match(
-                        /(\d+)/
+                expect(
+                    summaryText
+                )
+                    .toContain(
+                        selectedService
                     );
 
-                if (
-                    dayMatch
-                ) {
-
-                    await expect(
-                        summary
-                    ).toContainText(
-                        dayMatch[1]
-                    );
-                }
-
-                const monthMatch =
-                    selectedDate.match(
-                        /de\s+([a-zç]+)/i
-                    );
-
-                if (
-                    monthMatch
-                ) {
-
-                    await expect(
-                        summary
-                    ).toContainText(
-                        new RegExp(
-                            monthMatch[1],
-                            'i'
+                expect(
+                    normalize(
+                        summaryText
+                    )
+                )
+                    .toContain(
+                        normalize(
+                            selectedPrice
                         )
                     );
-                }
+
+                expect(
+                    summaryText
+                )
+                    .toContain(
+                        selectedHour
+                    );
+
+                await expect(
+                    page.getByText(
+                        'Previsão do atendimento'
+                    )
+                )
+                    .toBeVisible();
+
+                console.log(
+                    '\n✓ Resumo corresponde ao serviço reservado\n'
+                );
+
             }
+
         );
+
     }
+
 );

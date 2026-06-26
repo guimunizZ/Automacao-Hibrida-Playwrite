@@ -1,6 +1,6 @@
 =====================================================
 SMOKE SPECS REPORT
-GERADO EM: 05/06/2026, 08:27:26
+GERADO EM: 23/06/2026, 14:42:33
 =====================================================
 
 =====================================================
@@ -10,28 +10,127 @@ CAMINHO: tests/smoke/barbers.smoke.spec.ts
 FUNCAO: PREENCHER MANUALMENTE
 =====================================================
 
-
 import { test, expect } from '@playwright/test';
+
 import { LandingPage } from '../../pages/booking/LandingPage';
+import { BookingPage } from '../../pages/booking/BookingPage';
 
-test.describe('Smoke - Barbers', () => {
+test.describe(
+    'Smoke - Barbers',
+    () => {
 
-    test('[@smoke] barbeiros devem carregar', async ({ page }) => {
+        test(
+            '[@smoke] barbeiros da unidade I devem pertencer à unidade e ser selecionáveis',
+            async ({ page }) => {
 
-        const landingPage = new LandingPage(page);
+                const landingPage =
+                    new LandingPage(page);
 
-        await landingPage.goto();
+                const bookingPage =
+                    new BookingPage(page);
 
-        await landingPage.selectFirstUnit();
+                await landingPage.goto();
 
-        await expect(page).toHaveURL(
-            /barbershops\/\d+/i
+                await landingPage.selectUnit(0);
+
+                await bookingPage.selectService(0);
+
+                await expect(
+                    page.getByRole(
+                        'button',
+                        {
+                            name:
+                                /Carlos Henrique/
+                        }
+                    )
+                ).toBeVisible();
+
+                await expect(
+                    page.getByRole(
+                        'button',
+                        {
+                            name:
+                                /Matheus|Thiago|Dilsinho/
+                        }
+                    )
+                ).toHaveCount(0);
+
+                await bookingPage.selectBarber(
+                    'Carlos Henrique'
+                );
+
+                await expect(
+                    page.getByRole('textbox')
+                        .first()
+                ).toBeVisible();
+            }
         );
-    });
 
-});
+        test(
+            '[@smoke] barbeiros da unidade II devem pertencer à unidade e ser selecionáveis',
+            async ({ page }) => {
 
+                const landingPage =
+                    new LandingPage(page);
 
+                const bookingPage =
+                    new BookingPage(page);
+
+                await landingPage.goto();
+
+                await landingPage.selectUnit(1);
+
+                await bookingPage.selectService(0);
+
+                await expect(
+                    page.getByRole(
+                        'button',
+                        {
+                            name: /Matheus/
+                        }
+                    )
+                ).toBeVisible();
+
+                await expect(
+                    page.getByRole(
+                        'button',
+                        {
+                            name: /Thiago/
+                        }
+                    )
+                ).toBeVisible();
+
+                await expect(
+                    page.getByRole(
+                        'button',
+                        {
+                            name: /Dilsinho/
+                        }
+                    )
+                ).toBeVisible();
+
+                await expect(
+                    page.getByRole(
+                        'button',
+                        {
+                            name:
+                                /Carlos Henrique/
+                        }
+                    )
+                ).toHaveCount(0);
+
+                await bookingPage.selectBarber(
+                    'Thiago'
+                );
+
+                await expect(
+                    page.getByRole('textbox')
+                        .first()
+                ).toBeVisible();
+            }
+        );
+    }
+);
 
 =====================================================
 NÚMERO:2
@@ -40,54 +139,56 @@ CAMINHO: tests/smoke/booking-flow.smoke.spec.ts
 FUNCAO: PREENCHER MANUALMENTE
 =====================================================
 
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 import { LandingPage } from '../../pages/booking/LandingPage';
-
 import { BookingPage } from '../../pages/booking/BookingPage';
-
 import { ConfirmationModal } from '../../pages/booking/ConfirmationModal';
 
-test.describe('Smoke - Booking Flow', () => {
+test.describe(
+    'Smoke - Booking Flow',
+    () => {
 
-    test('[@smoke] usuário deve conseguir realizar um agendamento válido', async ({ page }) => {
+        test(
+            '[@smoke] fluxo completo de agendamento',
+            async ({ page }) => {
 
-        test.setTimeout(120000);
+                const landingPage =
+                    new LandingPage(page);
 
-        const landingPage = new LandingPage(page);
+                const bookingPage =
+                    new BookingPage(page);
 
-        const bookingPage = new BookingPage(page);
+                const confirmationModal =
+                    new ConfirmationModal(page);
 
-        const confirmationModal = new ConfirmationModal(page);
+                await landingPage.goto();
 
-        await landingPage.open();
+                await landingPage.selectUnit(0);
 
-        await landingPage.validateHomeLoaded();
+                await bookingPage.selectService(0);
 
-        await landingPage.selectUnit();
+                await bookingPage.selectBarber(
+                    'Carlos Henrique'
+                );
 
-        await bookingPage.selectService();
+                await bookingPage.fillClient();
 
-        await bookingPage.selectBarber();
+                await bookingPage.selectFutureDate();
 
-        await bookingPage.fillClient(
-            'Guilherme QA',
-            '(11) 99999-9999'
+                await bookingPage.selectHour();
+
+                await bookingPage.validateCanConfirm();
+
+                await bookingPage.confirmButton.click();
+
+                await confirmationModal.validateSuccess();
+
+            }
         );
 
-        await bookingPage.selectDate();
-
-        await bookingPage.selectTime();
-
-        await bookingPage.confirmBooking();
-
-        await confirmationModal.validateSuccess();
-
-        await confirmationModal.validateBookingDetails();
-
-        expect(true).toBeTruthy();
-    });
-});
+    }
+);
 
 =====================================================
 NÚMERO:3
@@ -108,24 +209,25 @@ import {
     BookingPage
 } from '../../pages/booking/BookingPage';
 
-test.use({
-    storageState:
-        'auth/user.json'
-});
-
 test.describe(
     'Smoke - Calendar',
     () => {
 
         test(
             '[@smoke] deve validar bloqueio de data passada',
-            async ({ page }) => {
+            async ({
+                       page
+                   }) => {
 
                 const landingPage =
-                    new LandingPage(page);
+                    new LandingPage(
+                        page
+                    );
 
                 const bookingPage =
-                    new BookingPage(page);
+                    new BookingPage(
+                        page
+                    );
 
                 await landingPage.goto();
 
@@ -138,7 +240,7 @@ test.describe(
                 );
 
                 await bookingPage.selectBarber(
-                    'Dilsinho'
+                    'Carlos Henrique'
                 );
 
                 await bookingPage.fillClient();
@@ -166,111 +268,113 @@ FUNCAO: PREENCHER MANUALMENTE
 
 import { test, expect } from '@playwright/test';
 
-import { LandingPage } from '../../../pages/booking/LandingPage';
-import { BookingPage } from '../../../pages/booking/BookingPage';
-import { ConfirmationModal } from '../../../pages/booking/ConfirmationModal';
+import { LandingPage } from '../../pages/booking/LandingPage';
+import { BookingPage } from '../../pages/booking/BookingPage';
+import { ConfirmationModal } from '../../pages/booking/ConfirmationModal';
 
-test.describe('Booking Alternative', () => {
+test.describe(
+    'Smoke - Confirmation',
+    () => {
 
-    test('deve validar dados do agendamento criado', async ({ page }) => {
+        test(
+            '[@smoke] deve validar detalhes da reserva criada',
+            async ({ page }) => {
 
-        const landingPage = new LandingPage(page);
+                const landingPage =
+                    new LandingPage(page);
 
-        const bookingPage = new BookingPage(page);
+                const bookingPage =
+                    new BookingPage(page);
 
-        const confirmationModal =
-            new ConfirmationModal(page);
+                const confirmationModal =
+                    new ConfirmationModal(page);
 
-        await landingPage.open();
+                const expectedUnit =
+                    'Unidade I';
 
-        await landingPage.selectUnit();
+                const expectedService =
+                    'Barba • 30 min';
 
-        await bookingPage.selectService();
+                const expectedBarber =
+                    'Dilsinho';
 
-        await bookingPage.selectBarber();
+                await landingPage.goto();
 
-        await bookingPage.fillClient(
-            'Guilherme QA',
-            '(11) 99999-9999'
+                await landingPage.selectUnit(0);
+
+                await bookingPage.selectService(0);
+
+                await bookingPage.selectBarber(
+                    expectedBarber
+                );
+
+                await bookingPage.fillClient();
+
+                await bookingPage.selectFutureDate();
+
+                await bookingPage.selectHour();
+
+                await bookingPage.confirmButton.click();
+
+                await confirmationModal.validateSuccess();
+
+                // Serviço
+                await expect(
+                    page.getByText(
+                        expectedService,
+                        {
+                            exact: true
+                        }
+                    )
+                ).toBeVisible();
+
+                // Barbeiro
+                await expect(
+                    page.locator(
+                        'p.font-semibold.text-white'
+                    ).filter({
+                        hasText: expectedBarber
+                    })
+                ).toBeVisible();
+
+                // Unidade
+                await expect(
+                    page.getByRole(
+                        'paragraph'
+                    ).filter({
+                        hasText: expectedUnit
+                    })
+                ).toBeVisible();
+
+                // Campo Data e Horário deve existir
+                await expect(
+                    page.getByText(
+                        'Data e horário',
+                        {
+                            exact: true
+                        }
+                    )
+                ).toBeVisible();
+
+                // Deve exibir um horário válido
+                await expect(
+                    page.getByText(
+                        /\d{2}\/\d{2}\/\d{4}\sàs\s\d{2}:\d{2}\saté\s\d{2}:\d{2}/
+                    )
+                ).toBeVisible();
+            }
         );
-
-        await bookingPage.selectFutureDate();
-
-        await bookingPage.selectAvailableTime();
-
-        await bookingPage.confirmBooking();
-
-        await confirmationModal.validateSuccess();
-
-        await expect(
-            page.locator('text=Barba')
-        ).toBeVisible();
-
-        await expect(
-            page.locator('text=Dilsinho')
-        ).toBeVisible();
-
-        await expect(
-            page.locator('text=Guilherme QA')
-        ).toBeVisible();
-    });
-});
+    }
+);
 
 =====================================================
 NÚMERO:5
-NOME: confirmation.smoke.spec.ts
-CAMINHO: tests/smoke/confirmation.smoke.spec.ts
+NOME: health.smoke.spec.ts
+CAMINHO: tests/smoke/health.smoke.spec.ts
 FUNCAO: PREENCHER MANUALMENTE
 =====================================================
 
-import { test } from '@playwright/test';
 
-import { LandingPage } from '../../pages/booking/LandingPage';
-
-import { BookingPage } from '../../pages/booking/BookingPage';
-
-import { ConfirmationModal } from '../../pages/booking/ConfirmationModal';
-
-test.describe('Smoke - Confirmation', () => {
-
-    test(
-        '[@smoke] modal de confirmação deve abrir',
-        async ({ page }) => {
-
-            test.setTimeout(90000);
-
-            const landingPage = new LandingPage(page);
-
-            const bookingPage = new BookingPage(page);
-
-            const confirmationModal =
-                new ConfirmationModal(page);
-
-            await landingPage.open();
-
-            await landingPage.selectUnit();
-
-            await bookingPage.selectService();
-
-            await bookingPage.selectBarber();
-
-            await bookingPage.fillClient(
-                'Guilherme QA',
-                '(11) 99999-9999'
-            );
-
-            await bookingPage.selectDate();
-
-            await bookingPage.selectTime();
-
-            await bookingPage.confirmBooking();
-
-            await confirmationModal.validateSuccess();
-
-            await confirmationModal.validateBookingDetails();
-        }
-    );
-});
 
 =====================================================
 NÚMERO:6
@@ -279,24 +383,23 @@ CAMINHO: tests/smoke/home.smoke.spec.ts
 FUNCAO: PREENCHER MANUALMENTE
 =====================================================
 
-import { test } from '@playwright/test';
-
+import { test, expect } from '@playwright/test';
 import { LandingPage } from '../../pages/booking/LandingPage';
 
 test.describe('Smoke - Home', () => {
 
     test('[@smoke] home deve carregar corretamente', async ({ page }) => {
 
-        const landingPage = new LandingPage(page);
+        const landingPage =
+            new LandingPage(page);
 
-        await landingPage.open();
+        await landingPage.goto();
 
-        await landingPage.validateHomeLoaded();
+        await expect(
+            landingPage.reserveButtons.first()
+        ).toBeVisible();
     });
 });
-
-
-
 
 =====================================================
 NÚMERO:7
@@ -305,27 +408,78 @@ CAMINHO: tests/smoke/services.smoke.spec.ts
 FUNCAO: PREENCHER MANUALMENTE
 =====================================================
 
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 import { LandingPage } from '../../pages/booking/LandingPage';
-
 import { BookingPage } from '../../pages/booking/BookingPage';
 
-test.describe('Smoke - Services', () => {
+test.describe(
+    'Smoke - Services',
+    () => {
 
-    test('[@smoke] serviços devem ser exibidos', async ({ page }) => {
+        test(
+            '[@smoke] serviço selecionado deve aparecer corretamente no resumo',
+            async ({ page }) => {
 
-        const landingPage = new LandingPage(page);
+                const landingPage =
+                    new LandingPage(page);
 
-        const bookingPage = new BookingPage(page);
+                const bookingPage =
+                    new BookingPage(page);
 
-        await landingPage.open();
+                await landingPage.goto();
 
-        await landingPage.selectUnit();
+                await landingPage.selectUnit(0);
 
-        await bookingPage.validateServicesLoaded();
-    });
-});
+                // Serviço Barba
+                await bookingPage.selectService(0);
+
+                // Resumo
+
+                await expect(
+                    page.getByRole(
+                        'heading',
+                        {
+                            name: 'Barba',
+                            exact: true
+                        }
+                    )
+                ).toBeVisible();
+
+                await expect(
+                    page.getByRole(
+                        'heading',
+                        {
+                            name: 'R$ 30,00',
+                            exact: true
+                        }
+                    )
+                ).toBeVisible();
+
+                // Seleciona barbeiro
+
+                await bookingPage.selectBarber(
+                    'Dilsinho'
+                );
+
+                // Seleciona data
+
+                await bookingPage.selectFutureDate();
+
+                // Duração do serviço
+
+                await expect(
+                    page.getByText(
+                        'Serviço com duração de 30 min',
+                        {
+                            exact: true
+                        }
+                    )
+                ).toBeVisible();
+            }
+        );
+    }
+);
 
 =====================================================
 NÚMERO:8
@@ -334,42 +488,70 @@ CAMINHO: tests/smoke/times.smoke.spec.ts
 FUNCAO: PREENCHER MANUALMENTE
 =====================================================
 
-xx'x'import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 import { LandingPage } from '../../pages/booking/LandingPage';
-
 import { BookingPage } from '../../pages/booking/BookingPage';
 
-test.describe('Smoke - Times', () => {
+test.describe(
+    'Smoke - Times',
+    () => {
 
-    test('[@smoke] horários devem carregar', async ({ page }) => {
+        test(
+            '[@smoke] horários devem aparecer somente após selecionar barbeiro e data',
+            async ({ page }) => {
 
-        test.setTimeout(120000);
+                const landingPage =
+                    new LandingPage(page);
 
-        const landingPage = new LandingPage(page);
+                const bookingPage =
+                    new BookingPage(page);
 
-        const bookingPage = new BookingPage(page);
+                await landingPage.goto();
 
-        await landingPage.open();
+                await landingPage.selectUnit(0);
 
-        await landingPage.selectUnit();
+                await bookingPage.selectService(0);
 
-        await bookingPage.selectService();
+                const hoursBeforeBarber =
+                    page.locator('button')
+                        .filter({
+                            hasText: /^\d{2}:\d{2}$/
+                        });
 
-        await bookingPage.selectBarber();
+                await expect(
+                    hoursBeforeBarber
+                ).toHaveCount(0);
 
-        await bookingPage.fillClient(
-            'Guilherme QA',
-            '(11) 99999-9999'
+                await bookingPage.selectBarber(
+                    'Dilsinho'
+                );
+
+                const hoursBeforeDate =
+                    page.locator('button')
+                        .filter({
+                            hasText: /^\d{2}:\d{2}$/
+                        });
+
+                await expect(
+                    hoursBeforeDate
+                ).toHaveCount(0);
+
+                await bookingPage.selectFutureDate();
+
+                const availableHours =
+                    page.locator('button')
+                        .filter({
+                            hasText: /^\d{2}:\d{2}$/
+                        });
+
+                await expect(
+                    availableHours.first()
+                ).toBeVisible();
+            }
         );
-
-        await bookingPage.selectDate();
-
-        await bookingPage.selectTime();
-
-        await bookingPage.validateAvailableTimes();
-    });
-});
+    }
+);
 
 =====================================================
 NÚMERO:9
@@ -378,5 +560,23 @@ CAMINHO: tests/smoke/units.smoke.spec.ts
 FUNCAO: PREENCHER MANUALMENTE
 =====================================================
 
+import { test, expect } from '@playwright/test';
 
+import { LandingPage } from '../../pages/booking/LandingPage';
+
+test.describe('Smoke - Units', () => {
+
+    test('[@smoke] deve acessar unidade ao clicar reservar', async ({ page }) => {
+
+        const landingPage =
+            new LandingPage(page);
+
+        await landingPage.goto();
+
+        await landingPage.selectUnit(1);
+
+        await expect(page)
+            .toHaveURL(/barbershops\/\d+/);
+    });
+});
 

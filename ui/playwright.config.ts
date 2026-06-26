@@ -1,27 +1,21 @@
-import { defineConfig, devices } from '@playwright/test';
+import {
+    defineConfig,
+    devices
+} from '@playwright/test';
+
 import dotenv from 'dotenv';
 
 dotenv.config({
-    path: 'env/.env.dev'
+    path: './env/.env.dev'
 });
 
 export default defineConfig({
 
     testDir: './tests',
 
-    fullyParallel: false,
-
-    forbidOnly: !!process.env.CI,
-
-    retries: 1,
-
-    workers: 1,
-
     timeout: 60000,
 
-    expect: {
-        timeout: 30000
-    },
+    fullyParallel: false,
 
     reporter: [
         ['html'],
@@ -30,21 +24,22 @@ export default defineConfig({
 
     use: {
 
-        baseURL: process.env.BASE_URL,
-
-        storageState: 'auth/user.json',
-
-        trace: 'on-first-retry',
-
-        screenshot: 'only-on-failure',
-
-        video: 'retain-on-failure',
+        baseURL:
+        process.env.BASE_URL,
 
         headless: false,
 
-        navigationTimeout: 60000,
+        storageState:
+            './playwright/.auth/user.json',
 
-        actionTimeout: 30000
+        trace:
+            'retain-on-failure',
+
+        screenshot:
+            'only-on-failure',
+
+        video:
+            'retain-on-failure'
     },
 
     projects: [
@@ -52,7 +47,9 @@ export default defineConfig({
             name: 'chromium',
 
             use: {
-                ...devices['Desktop Chrome']
+                ...devices[
+                    'Desktop Chrome'
+                    ]
             }
         }
     ]

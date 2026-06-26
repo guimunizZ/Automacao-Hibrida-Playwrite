@@ -23,42 +23,28 @@ test.describe(
 
                 await bookingPage.selectService(0);
 
-                // barbeiros corretos
-
                 await expect(
                     page.getByRole(
                         'button',
-                        { name: /Carlos/i }
+                        {
+                            name:
+                                /Carlos Henrique/
+                        }
                     )
                 ).toBeVisible();
 
                 await expect(
                     page.getByRole(
                         'button',
-                        { name: /Dilsinho/i }
-                    )
-                ).toBeVisible();
-
-                // barbeiros da unidade errada
-
-                await expect(
-                    page.getByRole(
-                        'button',
-                        { name: /Thiago/i }
+                        {
+                            name:
+                                /Matheus|Thiago|Dilsinho/
+                        }
                     )
                 ).toHaveCount(0);
-
-                await expect(
-                    page.getByRole(
-                        'button',
-                        { name: /Matheus/i }
-                    )
-                ).toHaveCount(0);
-
-                // valida clique
 
                 await bookingPage.selectBarber(
-                    'Carlos'
+                    'Carlos Henrique'
                 );
 
                 await expect(
@@ -84,39 +70,42 @@ test.describe(
 
                 await bookingPage.selectService(0);
 
-                // barbeiros corretos
-
                 await expect(
                     page.getByRole(
                         'button',
-                        { name: /Thiago/i }
+                        {
+                            name: /Matheus/
+                        }
                     )
                 ).toBeVisible();
 
                 await expect(
                     page.getByRole(
                         'button',
-                        { name: /Matheus/i }
+                        {
+                            name: /Thiago/
+                        }
                     )
                 ).toBeVisible();
 
-                // barbeiros da unidade errada
+                await expect(
+                    page.getByRole(
+                        'button',
+                        {
+                            name: /Dilsinho/
+                        }
+                    )
+                ).toBeVisible();
 
                 await expect(
                     page.getByRole(
                         'button',
-                        { name: /Carlos/i }
+                        {
+                            name:
+                                /Carlos Henrique/
+                        }
                     )
                 ).toHaveCount(0);
-
-                await expect(
-                    page.getByRole(
-                        'button',
-                        { name: /Dilsinho/i }
-                    )
-                ).toHaveCount(0);
-
-                // valida clique
 
                 await bookingPage.selectBarber(
                     'Thiago'

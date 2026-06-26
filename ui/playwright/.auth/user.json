@@ -1,0 +1,19 @@
+{
+  "cookies": [
+    {
+      "name": "__Secure-next-auth.session-token",
+      "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..QF8V-CTqU6NZ92_E.sV4sBqMWGTNi74nZmF-hPiwkuBwr4lvDKc7JvWXlqsRA9hP5mUj66lcDkOvmsiNcObTZZS_BiSMtXF8l3EYdFgJFQtiK9jC0T30rZfrhRqxR_uJn5Zwsrskn1424fdX9HMgYOB96GFVctp1RNbzifbYCQdFp6cHEu3Eu3HUu2fppGVyWQm80A3bXGdx8M2GTsIy12gMiaLehnzG0R2NOn7hxnifgl3zIBoGxfWxL0rjIN0pJBLU-J2tPrO2by-9HM_Zukw7WxoFHJUbwITXq31v4uYWZDQJO0gCDsjHa0q_1NeP7GBm56Z82I9wR4VgKZgdRmENNQ0gWf5mcci9_SqrABt6in_xxMg2FjItNxqwqhdFDPYZ0ooCknm1Ar93ZT-m0o2ejFcdXnR-99dav0aXdO1rV_prW9Zn-pCeOGUibgKllvSpQEN1JDJE1h_0lTuoA_-5aE1rxdSroxw.gSWRR2hkN7z5aOpLOo2g0Q",
+      "domain": "preview-barbeariamuniz.vercel.app",
+      "path": "/",
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://preview-barbeariamuniz.vercel.app",
+      "localStorage": []
+    }
+  ]
+}
